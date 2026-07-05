@@ -94,28 +94,32 @@
 
 ```text
 studyroom-reservation
-├── backend
-│   ├── src/main/java/com/studyroom/reservation
-│   │   ├── auth
-│   │   ├── user
-│   │   ├── room
-│   │   ├── reservation
-│   │   ├── admin
-│   │   ├── security
-│   │   ├── config
-│   │   └── common
-│   └── src/main/resources
-│       └── application.yml
+├── src/main/java/com/studyroom/reservation
+│   ├── auth
+│   ├── user
+│   ├── room
+│   ├── reservation
+│   ├── admin
+│   ├── security
+│   ├── config
+│   └── common
 │
-└── frontend
-    ├── src
-    │   ├── api
-    │   ├── components
-    │   ├── pages
-    │   ├── routes
-    │   ├── main.jsx
-    │   └── index.css
-    └── package.json
+├── src/main/resources
+│   ├── application.yml
+│   └── application-example.yml
+│
+├── frontend
+│   ├── src
+│   │   ├── api
+│   │   ├── components
+│   │   ├── pages
+│   │   ├── routes
+│   │   ├── main.jsx
+│   │   └── index.css
+│   └── package.json
+│
+├── pom.xml
+└── README.md
 ```
 
 ---
@@ -221,20 +225,13 @@ AND
 
 ### Backend 실행
 
-STS4에서 Spring Boot 애플리케이션을 실행합니다.
-
-또는 터미널에서 실행할 수 있습니다.
-
-```bash
-cd backend
-./mvnw spring-boot:run
-```
-
-Windows 환경에서 Maven Wrapper를 사용하지 않는 경우:
+프로젝트 루트에서 실행합니다.
 
 ```bash
 mvn spring-boot:run
 ```
+
+또는 STS4에서 Spring Boot 애플리케이션을 실행합니다.
 
 ### Frontend 실행
 
