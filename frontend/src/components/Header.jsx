@@ -1,0 +1,58 @@
+import { Link, useNavigate } from 'react-router-dom';
+
+function Header() {
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem('accessToken');
+  const userName = localStorage.getItem('userName');
+  const userRole = localStorage.getItem('userRole');
+
+  const isLogin = !!token;
+  const isAdmin = userRole === 'ADMIN';
+
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userRole');
+
+    alert('로그아웃되었습니다.');
+    navigate('/login');
+    window.location.reload();
+  };
+
+  return (
+    <header className="header">
+      <div className="header-inner">
+        <Link to="/" className="logo">
+          StudyRoom
+        </Link>
+
+        <nav className="nav">
+          <Link to="/">공간 목록</Link>
+
+          {isLogin && <Link to="/my-reservations">내 예약</Link>}
+
+          {isAdmin && <Link to="/admin">관리자</Link>}
+
+          {isLogin ? (
+            <>
+              <span className="user-name">{userName}님</span>
+              <button type="button" className="nav-button" onClick={handleLogout}>
+                로그아웃
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">로그인</Link>
+              <Link to="/signup">회원가입</Link>
+            </>
+          )}
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+export default Header;
