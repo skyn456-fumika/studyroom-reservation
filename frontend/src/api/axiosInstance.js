@@ -3,7 +3,7 @@ import axios from 'axios';
 let isAuthAlertShown = false;
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8095',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },

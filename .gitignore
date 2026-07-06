@@ -34,3 +34,5 @@ build/
 
 # local config
 src/main/resources/application.yml
+
+frontend/.env
