@@ -31,6 +31,9 @@ function AdminPage() {
 
   const [activeTab, setActiveTab] = useState('rooms');
 
+  const [reservationStatusFilter, setReservationStatusFilter] = useState('ALL');
+  const [reservationSearchKeyword, setReservationSearchKeyword] = useState('');
+
   const [loading, setLoading] = useState(true);
   const [actionLoadingId, setActionLoadingId] = useState(null);
 
@@ -294,6 +297,21 @@ function AdminPage() {
     );
   }
 
+  const filteredReservations = reservations.filter((reservation) => {
+    const matchesStatus =
+      reservationStatusFilter === 'ALL' ||
+      reservation.status === reservationStatusFilter;
+
+    const keyword = reservationSearchKeyword.trim().toLowerCase();
+
+    const matchesKeyword =
+      !keyword ||
+      reservation.roomName.toLowerCase().includes(keyword) ||
+      reservation.userName.toLowerCase().includes(keyword);
+
+    return matchesStatus && matchesKeyword;
+  });
+
   return (
     <div>
       <h1 className="page-title">관리자 페이지</h1>
@@ -344,11 +362,18 @@ function AdminPage() {
         <section className="admin-section admin-reservation-section">
           <div className="section-header">
             <h2 className="section-title">예약 관리</h2>
-            <span className="section-count">총 {reservations.length}건</span>
+            <span className="section-count">
+              {filteredReservations.length} / {reservations.length}건
+            </span>
           </div>
 
           <AdminReservationList
-            reservations={reservations}
+            reservations={filteredReservations}
+            totalCount={reservations.length}
+            reservationStatusFilter={reservationStatusFilter}
+            reservationSearchKeyword={reservationSearchKeyword}
+            onStatusFilterChange={setReservationStatusFilter}
+            onSearchKeywordChange={setReservationSearchKeyword}
             actionLoadingId={actionLoadingId}
             onApprove={handleApprove}
             onReject={handleReject}
