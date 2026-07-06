@@ -29,6 +29,8 @@ function AdminPage() {
   const [reservations, setReservations] = useState([]);
   const [rooms, setRooms] = useState([]);
 
+  const [activeTab, setActiveTab] = useState('rooms');
+
   const [loading, setLoading] = useState(true);
   const [actionLoadingId, setActionLoadingId] = useState(null);
 
@@ -296,41 +298,63 @@ function AdminPage() {
     <div>
       <h1 className="page-title">관리자 페이지</h1>
 
-      <section className="admin-section">
-        <div className="section-header">
-          <h2 className="section-title">공간 관리</h2>
-          <span className="section-count">총 {rooms.length}개</span>
-        </div>
+      <div className="admin-tabs">
+        <button
+          type="button"
+          className={`admin-tab-button ${activeTab === 'rooms' ? 'active' : ''}`}
+          onClick={() => setActiveTab('rooms')}
+        >
+          공간 관리
+        </button>
 
-        <AdminRoomForm
-          roomForm={roomForm}
-          editingRoomId={editingRoomId}
-          roomSaving={roomSaving}
-          onChange={handleRoomFormChange}
-          onSubmit={handleRoomSubmit}
-          onCancelEdit={handleCancelEdit}
-        />
+        <button
+          type="button"
+          className={`admin-tab-button ${activeTab === 'reservations' ? 'active' : ''}`}
+          onClick={() => setActiveTab('reservations')}
+        >
+          예약 관리
+        </button>
+      </div>
 
-        <AdminRoomList
-          rooms={rooms}
-          onEditRoom={handleEditRoom}
-          onToggleRoomStatus={handleToggleRoomStatus}
-        />
-      </section>
+      {activeTab === 'rooms' && (
+        <section className="admin-section">
+          <div className="section-header">
+            <h2 className="section-title">공간 관리</h2>
+            <span className="section-count">총 {rooms.length}개</span>
+          </div>
 
-      <section className="admin-section admin-reservation-section">
-        <div className="section-header">
-          <h2 className="section-title">예약 관리</h2>
-          <span className="section-count">총 {reservations.length}건</span>
-        </div>
+          <AdminRoomForm
+            roomForm={roomForm}
+            editingRoomId={editingRoomId}
+            roomSaving={roomSaving}
+            onChange={handleRoomFormChange}
+            onSubmit={handleRoomSubmit}
+            onCancelEdit={handleCancelEdit}
+          />
 
-        <AdminReservationList
-          reservations={reservations}
-          actionLoadingId={actionLoadingId}
-          onApprove={handleApprove}
-          onReject={handleReject}
-        />
-      </section>
+          <AdminRoomList
+            rooms={rooms}
+            onEditRoom={handleEditRoom}
+            onToggleRoomStatus={handleToggleRoomStatus}
+          />
+        </section>
+      )}
+
+      {activeTab === 'reservations' && (
+        <section className="admin-section admin-reservation-section">
+          <div className="section-header">
+            <h2 className="section-title">예약 관리</h2>
+            <span className="section-count">총 {reservations.length}건</span>
+          </div>
+
+          <AdminReservationList
+            reservations={reservations}
+            actionLoadingId={actionLoadingId}
+            onApprove={handleApprove}
+            onReject={handleReject}
+          />
+        </section>
+      )}
     </div>
   );
 }
