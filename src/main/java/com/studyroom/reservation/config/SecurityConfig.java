@@ -14,6 +14,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.studyroom.reservation.security.CustomAccessDeniedHandler;
+import com.studyroom.reservation.security.CustomAuthenticationEntryPoint;
 import com.studyroom.reservation.security.JwtAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
@@ -23,11 +25,15 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
+	private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+	private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.cors(cors -> cors.configurationSource(corsConfigurationSource())).csrf(csrf -> csrf.disable()).formLogin(form -> form.disable())
 				.httpBasic(basic -> basic.disable()).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.exceptionHandling(exception -> exception.authenticationEntryPoint(customAuthenticationEntryPoint)
+						.accessDeniedHandler(customAccessDeniedHandler))
 				.authorizeHttpRequests(auth -> auth.requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
 						.requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/users/me").authenticated().requestMatchers("/api/admin/**")
 						.hasRole("ADMIN").requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/rooms/**").permitAll()

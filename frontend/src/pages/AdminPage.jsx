@@ -57,6 +57,10 @@ function AdminPage() {
     } catch (error) {
       console.error(error);
 
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return;
+      }
+
       const message =
         error.response?.data?.message || '관리자 데이터를 불러오지 못했습니다.';
 
@@ -81,6 +85,10 @@ function AdminPage() {
     } catch (error) {
       console.error(error);
 
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return;
+      }
+
       const message =
         error.response?.data?.message || '예약 승인에 실패했습니다.';
 
@@ -104,6 +112,10 @@ function AdminPage() {
       fetchReservations();
     } catch (error) {
       console.error(error);
+
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return;
+      }
 
       const message =
         error.response?.data?.message || '예약 거절에 실패했습니다.';
@@ -195,6 +207,10 @@ function AdminPage() {
     } catch (error) {
       console.error(error);
 
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return;
+      }
+
       const message =
         error.response?.data?.message || '공간 저장에 실패했습니다.';
 
@@ -251,6 +267,10 @@ function AdminPage() {
       fetchRooms();
     } catch (error) {
       console.error(error);
+
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return;
+      }
 
       const message =
         error.response?.data?.message || '공간 상태 변경에 실패했습니다.';

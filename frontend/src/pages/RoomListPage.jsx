@@ -14,6 +14,11 @@ function RoomListPage() {
       setRooms(response.data);
     } catch (error) {
       console.error(error);
+
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return;
+      }
+      
       alert('공간 목록을 불러오지 못했습니다.');
     } finally {
       setLoading(false);

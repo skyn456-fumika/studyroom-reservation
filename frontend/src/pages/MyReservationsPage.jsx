@@ -17,6 +17,10 @@ function MyReservationsPage() {
     } catch (error) {
       console.error(error);
 
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return;
+      }
+
       const message =
         error.response?.data?.message || '예약 목록을 불러오지 못했습니다.';
 
@@ -40,6 +44,10 @@ function MyReservationsPage() {
       fetchReservations();
     } catch (error) {
       console.error(error);
+
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return;
+      }
 
       const message =
         error.response?.data?.message || '예약 취소에 실패했습니다.';

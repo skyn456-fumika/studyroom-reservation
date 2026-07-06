@@ -37,8 +37,6 @@ function LoginPage() {
     try {
       setLoading(true);
 
-        console.log('login form:', form);
-
       const response = await login(form);
 
       const data = response.data;

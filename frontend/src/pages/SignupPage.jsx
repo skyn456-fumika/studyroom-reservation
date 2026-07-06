@@ -65,6 +65,10 @@ function SignupPage() {
     } catch (error) {
       console.error(error);
 
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return;
+      }
+
       const message =
         error.response?.data?.message || '회원가입에 실패했습니다.';
 

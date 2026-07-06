@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getRoom, getAvailableTimes } from '../api/roomApi';
 import { createReservation } from '../api/reservationApi';
 
@@ -18,12 +18,18 @@ function RoomDetailPage() {
   const [selectedTime, setSelectedTime] = useState(null);
   const [reservationLoading, setReservationLoading] = useState(false);
 
+  const navigate = useNavigate();
+
   const fetchRoom = async () => {
     try {
       const response = await getRoom(roomId);
       setRoom(response.data);
     } catch (error) {
       console.error(error);
+
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return;
+      }
 
       const message =
         error.response?.data?.message || '공간 정보를 불러오지 못했습니다.';
@@ -44,6 +50,10 @@ function RoomDetailPage() {
     } catch (error) {
       console.error(error);
 
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return;
+      }
+
       const message =
         error.response?.data?.message || '예약 가능 시간을 불러오지 못했습니다.';
 
@@ -62,45 +72,49 @@ function RoomDetailPage() {
   };
 
   const handleReservation = async () => {
-  const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('accessToken');
 
-  if (!token) {
-    alert('로그인이 필요합니다.');
-    return;
-  }
+    if (!token) {
+      alert('로그인이 필요합니다.');
+      return;
+    }
 
-  if (!selectedTime) {
-    alert('예약 시간을 선택해주세요.');
-    return;
-  }
+    if (!selectedTime) {
+      alert('예약 시간을 선택해주세요.');
+      return;
+    }
 
-  if (!window.confirm('선택한 시간으로 예약을 신청하시겠습니까?')) {
-    return;
-  }
+    if (!window.confirm('선택한 시간으로 예약을 신청하시겠습니까?')) {
+      return;
+    }
 
-  try {
-    setReservationLoading(true);
+    try {
+      setReservationLoading(true);
 
-    await createReservation({
-      roomId: Number(roomId),
-      reservationDate: selectedDate,
-      startTime: selectedTime.startTime,
-      endTime: selectedTime.endTime,
-    });
+      await createReservation({
+        roomId: Number(roomId),
+        reservationDate: selectedDate,
+        startTime: selectedTime.startTime,
+        endTime: selectedTime.endTime,
+      });
 
-    alert('예약 신청이 완료되었습니다.');
-    window.location.href = '/my-reservations';
-  } catch (error) {
-    console.error(error);
+      alert('예약 신청이 완료되었습니다.');
+      navigate('/my-reservations');
+    } catch (error) {
+      console.error(error);
 
-    const message =
-      error.response?.data?.message || '예약 신청에 실패했습니다.';
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return;
+      }
 
-    alert(message);
-  } finally {
-    setReservationLoading(false);
-  }
-};
+      const message =
+        error.response?.data?.message || '예약 신청에 실패했습니다.';
+
+      alert(message);
+    } finally {
+      setReservationLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchRoom();
