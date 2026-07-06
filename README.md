@@ -5,6 +5,21 @@
 
 ---
 
+## 프로젝트 특징
+
+- JWT 기반 로그인 및 인증 처리
+- Spring Security를 이용한 사용자/관리자 권한 분리
+- 401 Unauthorized / 403 Forbidden 응답 분리
+- BusinessException과 ErrorCode 기반의 비즈니스 예외 처리
+- 예약 시간 중복 방지 로직 구현
+- 예약 가능 시간대 조회 기능 구현
+- 관리자 공간 등록/수정/활성화/비활성화 기능 구현
+- React API 호출 모듈 분리
+- 관리자 페이지 컴포넌트 분리
+- 프론트엔드 API URL 환경변수 분리
+
+---
+
 ## 프로젝트 개요
 
 이 프로젝트는 Spring Boot 기반 REST API 서버와 React 기반 프론트엔드로 구성된 스터디룸 예약 시스템입니다.
@@ -108,6 +123,10 @@
 
 ![관리자 공간 관리](docs/images/admin-rooms.png)
 
+### 관리자 예약 관리
+
+![관리자 예약 관리](docs/images/admin-reservations.png)
+
 ---
 ## 프로젝트 구조
 
@@ -124,7 +143,7 @@ studyroom-reservation
 │   └── common
 │
 ├── src/main/resources
-│   ├── application.yml
+│   ├── application.yml             # local only, git ignored
 │   └── application-example.yml
 │
 ├── frontend
@@ -252,6 +271,14 @@ mvn spring-boot:run
 
 또는 STS4에서 Spring Boot 애플리케이션을 실행합니다.
 
+### Frontend 환경변수 설정
+
+`frontend/.env.example` 파일을 참고하여 `frontend/.env` 파일을 생성합니다.
+
+```env
+VITE_API_BASE_URL=http://localhost:8095
+```
+
 ### Frontend 실행
 
 ```bash
@@ -336,6 +363,8 @@ WHERE email = 'admin@example.com';
 - 예약 가능 시간 조회 API
 - Swagger 문서화
 - 공통 예외 처리
+- BusinessException / ErrorCode 기반 비즈니스 예외 처리
+- 인증 실패와 권한 없음에 대한 401 / 403 응답 분리
 
 ### Frontend
 
@@ -352,13 +381,17 @@ WHERE email = 'admin@example.com';
 - 내 예약 목록 및 취소 기능
 - 관리자 예약 관리 화면
 - 관리자 공간 관리 화면
+- Axios Interceptor 기반 401 / 403 공통 처리
+- API 호출 모듈 분리
+- 관리자 페이지 컴포넌트 분리
+- 환경변수를 통한 API URL 관리
 
 ---
 
 ## 향후 개선 사항
 
 - 화면 디자인 고도화
-- 관리자 페이지 탭 분리
+- 관리자 공간 관리 / 예약 관리 화면 탭 전환 기능 추가
 - 예약 검색/필터 기능 추가
 - 공간 이미지 업로드 기능 추가
 - 예약 승인/거절 사유 입력 기능 추가
