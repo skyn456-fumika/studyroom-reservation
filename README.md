@@ -287,6 +287,44 @@ npm install
 npm run dev
 ```
 
+### Frontend 빌드 후 Spring Boot에 포함하기
+
+`frontend/package.json`에는 다음과 같은 통합 빌드용 스크립트를 추가했습니다.
+
+```json
+"build:copy": "vite build && xcopy dist\\* ..\\src\\main\\resources\\static\\ /E /H /Y"
+```
+
+React 빌드 결과를 Spring Boot의 static 리소스 폴더로 복사할 수 있습니다.
+
+```bash
+cd frontend
+npm run build:copy
+```
+
+위 명령어는 React 프로젝트를 빌드한 뒤, 생성된 dist 파일들을 아래 경로로 복사합니다.
+
+src/main/resources/static
+
+이후 프로젝트 루트에서 Spring Boot jar 파일을 빌드합니다.
+
+```bash
+cd ..
+mvn clean package
+```
+
+jar 실행:
+
+```bash
+java -jar target/reservation-0.0.1-SNAPSHOT.jar
+```
+
+실행 후 아래 주소로 접속하면 React 화면과 백엔드 API를 같은 서버에서 확인할 수 있습니다.
+
+http://localhost:8095
+
+
+
 ---
 
 ## 접속 주소
