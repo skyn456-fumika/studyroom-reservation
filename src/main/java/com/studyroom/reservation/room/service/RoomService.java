@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.studyroom.reservation.common.exception.BusinessException;
+import com.studyroom.reservation.common.exception.ErrorCode;
 import com.studyroom.reservation.room.dto.RoomCreateRequest;
 import com.studyroom.reservation.room.dto.RoomResponse;
 import com.studyroom.reservation.room.dto.RoomUpdateRequest;
@@ -40,10 +42,10 @@ public class RoomService {
 
 	@Transactional(readOnly = true)
 	public RoomResponse getRoom(Long roomId) {
-		Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("공간을 찾을 수 없습니다."));
+		Room room = roomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.ROOM_NOT_FOUND));
 
 		if (room.getStatus() != RoomStatus.ACTIVE) {
-			throw new IllegalArgumentException("예약 가능한 공간이 아닙니다.");
+			throw new BusinessException(ErrorCode.ROOM_INACTIVE);
 		}
 
 		return RoomResponse.from(room);
@@ -51,14 +53,14 @@ public class RoomService {
 
 	private void validateOperatingHours(int openHour, int closeHour) {
 		if (openHour >= closeHour) {
-			throw new IllegalArgumentException("운영 시작 시간은 운영 종료 시간보다 빨라야 합니다.");
+			throw new BusinessException(ErrorCode.INVALID_ROOM_TIME);
 		}
 	}
 
 	public RoomResponse updateRoom(Long roomId, RoomUpdateRequest request) {
 		validateOperatingHours(request.getOpenHour(), request.getCloseHour());
 
-		Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("공간을 찾을 수 없습니다."));
+		Room room = roomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.ROOM_NOT_FOUND));
 
 		room.update(request.getName(), request.getDescription(), request.getLocation(), request.getCapacity(), request.getHourlyPrice(),
 				request.getOpenHour(), request.getCloseHour());
@@ -67,7 +69,7 @@ public class RoomService {
 	}
 
 	public RoomResponse activateRoom(Long roomId) {
-		Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("공간을 찾을 수 없습니다."));
+		Room room = roomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.ROOM_NOT_FOUND));
 
 		room.activate();
 
@@ -75,7 +77,7 @@ public class RoomService {
 	}
 
 	public RoomResponse deactivateRoom(Long roomId) {
-		Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("공간을 찾을 수 없습니다."));
+		Room room = roomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.ROOM_NOT_FOUND));
 
 		room.deactivate();
 

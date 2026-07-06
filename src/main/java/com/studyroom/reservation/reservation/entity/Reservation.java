@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import com.studyroom.reservation.common.exception.BusinessException;
+import com.studyroom.reservation.common.exception.ErrorCode;
 import com.studyroom.reservation.reservation.type.ReservationStatus;
 import com.studyroom.reservation.room.entity.Room;
 import com.studyroom.reservation.user.entity.User;
@@ -85,15 +87,15 @@ public class Reservation {
 
 	public void cancel(Long userId) {
 		if (!this.user.getId().equals(userId)) {
-			throw new IllegalArgumentException("본인의 예약만 취소할 수 있습니다.");
+			throw new BusinessException(ErrorCode.RESERVATION_NOT_OWNER);
 		}
 
 		if (this.status == ReservationStatus.CANCELED) {
-			throw new IllegalArgumentException("이미 취소된 예약입니다.");
+			throw new BusinessException(ErrorCode.RESERVATION_ALREADY_CANCELED);
 		}
 
 		if (this.status == ReservationStatus.REJECTED) {
-			throw new IllegalArgumentException("거절된 예약은 취소할 수 없습니다.");
+			throw new BusinessException(ErrorCode.RESERVATION_ALREADY_REJECTED);
 		}
 
 		this.status = ReservationStatus.CANCELED;
@@ -101,7 +103,7 @@ public class Reservation {
 
 	public void approve() {
 		if (this.status != ReservationStatus.PENDING) {
-			throw new IllegalArgumentException("승인 대기 상태의 예약만 승인할 수 있습니다.");
+			throw new BusinessException(ErrorCode.RESERVATION_NOT_PENDING);
 		}
 
 		this.status = ReservationStatus.APPROVED;
@@ -109,7 +111,7 @@ public class Reservation {
 
 	public void reject() {
 		if (this.status != ReservationStatus.PENDING) {
-			throw new IllegalArgumentException("승인 대기 상태의 예약만 거절할 수 있습니다.");
+			throw new BusinessException(ErrorCode.RESERVATION_NOT_PENDING);
 		}
 
 		this.status = ReservationStatus.REJECTED;

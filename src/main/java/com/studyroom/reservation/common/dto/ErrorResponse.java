@@ -2,11 +2,14 @@ package com.studyroom.reservation.common.dto;
 
 import java.time.LocalDateTime;
 
-import lombok.Builder;
+import org.springframework.http.HttpStatus;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ErrorResponse {
 
 	private LocalDateTime timestamp;
@@ -15,7 +18,7 @@ public class ErrorResponse {
 	private String message;
 	private String path;
 
-	public static ErrorResponse of(int status, String error, String message, String path) {
-		return ErrorResponse.builder().timestamp(LocalDateTime.now()).status(status).error(error).message(message).path(path).build();
+	public static ErrorResponse of(HttpStatus status, String message, String path) {
+		return new ErrorResponse(LocalDateTime.now(), status.value(), status.getReasonPhrase(), message, path);
 	}
 }

@@ -8,6 +8,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.studyroom.reservation.common.exception.BusinessException;
+import com.studyroom.reservation.common.exception.ErrorCode;
 import com.studyroom.reservation.reservation.dto.AvailableTimeResponse;
 import com.studyroom.reservation.reservation.dto.ReservationCreateRequest;
 import com.studyroom.reservation.reservation.dto.ReservationResponse;
@@ -33,9 +35,9 @@ public class ReservationService {
 	private final UserRepository userRepository;
 
 	public ReservationResponse createReservation(Long userId, ReservationCreateRequest request) {
-		User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+		User user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-		Room room = roomRepository.findById(request.getRoomId()).orElseThrow(() -> new IllegalArgumentException("공간을 찾을 수 없습니다."));
+		Room room = roomRepository.findById(request.getRoomId()).orElseThrow(() -> new BusinessException(ErrorCode.ROOM_NOT_FOUND));
 
 		validateRoomActive(room);
 		validateReservationTime(room, request.getReservationDate(), request.getStartTime(), request.getEndTime());
@@ -51,24 +53,24 @@ public class ReservationService {
 
 	private void validateRoomActive(Room room) {
 		if (room.getStatus() != RoomStatus.ACTIVE) {
-			throw new IllegalArgumentException("예약 가능한 공간이 아닙니다.");
+			throw new BusinessException(ErrorCode.ROOM_INACTIVE);
 		}
 	}
 
 	private void validateReservationTime(Room room, LocalDate reservationDate, LocalTime startTime, LocalTime endTime) {
 		if (!startTime.isBefore(endTime)) {
-			throw new IllegalArgumentException("시작 시간은 종료 시간보다 빨라야 합니다.");
+			throw new BusinessException(ErrorCode.INVALID_RESERVATION_TIME);
 		}
 
 		LocalTime openTime = LocalTime.of(room.getOpenHour(), 0);
 		LocalTime closeTime = LocalTime.of(room.getCloseHour(), 0);
 
 		if (startTime.isBefore(openTime) || endTime.isAfter(closeTime)) {
-			throw new IllegalArgumentException("예약 시간이 공간 운영 시간 범위를 벗어났습니다.");
+			throw new BusinessException(ErrorCode.RESERVATION_OUT_OF_ROOM_TIME);
 		}
 
 		if (reservationDate.isEqual(LocalDate.now()) && startTime.isBefore(LocalTime.now())) {
-			throw new IllegalArgumentException("지난 시간으로는 예약할 수 없습니다.");
+			throw new BusinessException(ErrorCode.RESERVATION_PAST_TIME);
 		}
 	}
 
@@ -83,7 +85,8 @@ public class ReservationService {
 	}
 
 	public ReservationResponse approveReservation(Long reservationId) {
-		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
+		Reservation reservation = reservationRepository.findById(reservationId)
+				.orElseThrow(() -> new BusinessException(ErrorCode.RESERVATION_NOT_FOUND));
 
 		reservation.approve();
 
@@ -91,7 +94,8 @@ public class ReservationService {
 	}
 
 	public ReservationResponse rejectReservation(Long reservationId) {
-		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
+		Reservation reservation = reservationRepository.findById(reservationId)
+				.orElseThrow(() -> new BusinessException(ErrorCode.RESERVATION_NOT_FOUND));
 
 		reservation.reject();
 
@@ -102,12 +106,13 @@ public class ReservationService {
 		boolean exists = reservationRepository.existsOverlappingReservation(roomId, reservationDate, startTime, endTime);
 
 		if (exists) {
-			throw new IllegalArgumentException("이미 예약된 시간대입니다.");
+			throw new BusinessException(ErrorCode.RESERVATION_ALREADY_EXISTS);
 		}
 	}
 
 	public ReservationResponse cancelReservation(Long userId, Long reservationId) {
-		Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("예약을 찾을 수 없습니다."));
+		Reservation reservation = reservationRepository.findById(reservationId)
+				.orElseThrow(() -> new BusinessException(ErrorCode.RESERVATION_NOT_FOUND));
 
 		reservation.cancel(userId);
 
@@ -116,14 +121,14 @@ public class ReservationService {
 
 	@Transactional(readOnly = true)
 	public List<RoomReservationResponse> getRoomReservations(Long roomId, LocalDate date) {
-		roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("공간을 찾을 수 없습니다."));
+		roomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.ROOM_NOT_FOUND));
 
 		return reservationRepository.findRoomReservationsByDate(roomId, date).stream().map(RoomReservationResponse::from).toList();
 	}
 
 	@Transactional(readOnly = true)
 	public List<AvailableTimeResponse> getAvailableTimes(Long roomId, LocalDate date) {
-		Room room = roomRepository.findById(roomId).orElseThrow(() -> new IllegalArgumentException("공간을 찾을 수 없습니다."));
+		Room room = roomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.ROOM_NOT_FOUND));
 
 		List<Reservation> reservations = reservationRepository.findRoomReservationsByDate(roomId, date);
 
