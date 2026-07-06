@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import axiosInstance from '../api/axiosInstance';
+import { getMyReservations, cancelReservation } from '../api/reservationApi';
+import {
+  getReservationStatusText,
+  canCancelReservation,
+} from '../utils/reservationStatusUtils';
 
 function MyReservationsPage() {
   const [reservations, setReservations] = useState([]);
@@ -8,7 +12,7 @@ function MyReservationsPage() {
 
   const fetchReservations = async () => {
     try {
-      const response = await axiosInstance.get('/api/reservations/me');
+      const response = await getMyReservations();
       setReservations(response.data);
     } catch (error) {
       console.error(error);
@@ -30,7 +34,7 @@ function MyReservationsPage() {
     try {
       setCancelLoadingId(reservationId);
 
-      await axiosInstance.patch(`/api/reservations/${reservationId}/cancel`);
+      await cancelReservation(reservationId);
 
       alert('예약이 취소되었습니다.');
       fetchReservations();
@@ -44,25 +48,6 @@ function MyReservationsPage() {
     } finally {
       setCancelLoadingId(null);
     }
-  };
-
-  const getStatusText = (status) => {
-    switch (status) {
-      case 'PENDING':
-        return '승인 대기';
-      case 'APPROVED':
-        return '승인 완료';
-      case 'REJECTED':
-        return '거절됨';
-      case 'CANCELED':
-        return '취소됨';
-      default:
-        return status;
-    }
-  };
-
-  const canCancel = (status) => {
-    return status === 'PENDING' || status === 'APPROVED';
   };
 
   useEffect(() => {
@@ -104,7 +89,7 @@ function MyReservationsPage() {
                 </div>
 
                 <span className={`status-badge ${reservation.status.toLowerCase()}`}>
-                  {getStatusText(reservation.status)}
+                  {getReservationStatusText(reservation.status)}
                 </span>
               </div>
 
@@ -113,7 +98,7 @@ function MyReservationsPage() {
                   예약자: {reservation.userName}
                 </p>
 
-                {canCancel(reservation.status) && (
+                {canCancelReservation(reservation.status) && (
                   <button
                     type="button"
                     className="danger-button"

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../api/axiosInstance';
+import { login } from '../api/authApi';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ function LoginPage() {
 
         console.log('login form:', form);
 
-      const response = await axiosInstance.post('/api/auth/login', form);
+      const response = await login(form);
 
       const data = response.data;
 

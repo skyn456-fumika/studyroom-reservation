@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axiosInstance from '../api/axiosInstance';
+import { getRooms } from '../api/roomApi';
 import { useNavigate } from 'react-router-dom';
 
 function RoomListPage() {
@@ -10,7 +10,7 @@ function RoomListPage() {
 
   const fetchRooms = async () => {
     try {
-      const response = await axiosInstance.get('/api/rooms');
+      const response = await getRooms();
       setRooms(response.data);
     } catch (error) {
       console.error(error);

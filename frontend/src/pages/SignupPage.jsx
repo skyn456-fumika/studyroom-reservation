@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../api/axiosInstance';
+import { signup } from '../api/authApi';
 
 function SignupPage() {
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ function SignupPage() {
     try {
       setLoading(true);
 
-      await axiosInstance.post('/api/auth/signup', {
+      await signup({
         email: form.email,
         name: form.name,
         password: form.password,

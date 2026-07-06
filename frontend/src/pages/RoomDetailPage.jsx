@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axiosInstance from '../api/axiosInstance';
+import { getRoom, getAvailableTimes } from '../api/roomApi';
+import { createReservation } from '../api/reservationApi';
 
 function RoomDetailPage() {
   const { roomId } = useParams();
@@ -19,7 +20,7 @@ function RoomDetailPage() {
 
   const fetchRoom = async () => {
     try {
-      const response = await axiosInstance.get(`/api/rooms/${roomId}`);
+      const response = await getRoom(roomId);
       setRoom(response.data);
     } catch (error) {
       console.error(error);
@@ -37,14 +38,7 @@ function RoomDetailPage() {
     try {
       setTimeLoading(true);
 
-      const response = await axiosInstance.get(
-        `/api/rooms/${roomId}/available-times`,
-        {
-          params: {
-            date,
-          },
-        }
-      );
+      const response = await getAvailableTimes(roomId, date);
 
       setAvailableTimes(response.data);
     } catch (error) {
@@ -87,7 +81,7 @@ function RoomDetailPage() {
   try {
     setReservationLoading(true);
 
-    await axiosInstance.post('/api/reservations', {
+    await createReservation({
       roomId: Number(roomId),
       reservationDate: selectedDate,
       startTime: selectedTime.startTime,

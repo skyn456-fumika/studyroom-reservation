@@ -90,6 +90,25 @@
 
 ---
 
+## 화면 미리보기
+
+### 공간 목록
+
+![공간 목록](docs/images/main-room-list.png)
+
+### 공간 상세 및 예약
+
+![공간 상세](docs/images/room-detail.png)
+
+### 내 예약 목록
+
+![내 예약 목록](docs/images/my-reservations.png)
+
+### 관리자 공간 관리
+
+![관리자 공간 관리](docs/images/admin-rooms.png)
+
+---
 ## 프로젝트 구조
 
 ```text
