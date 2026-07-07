@@ -66,6 +66,9 @@ public class Reservation {
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
 
+	@Column(length = 500)
+	private String adminMemo;
+
 	@Builder
 	private Reservation(User user, Room room, LocalDate reservationDate, LocalTime startTime, LocalTime endTime, ReservationStatus status) {
 		this.user = user;
@@ -101,19 +104,21 @@ public class Reservation {
 		this.status = ReservationStatus.CANCELED;
 	}
 
-	public void approve() {
+	public void approve(String adminMemo) {
 		if (this.status != ReservationStatus.PENDING) {
 			throw new BusinessException(ErrorCode.RESERVATION_NOT_PENDING);
 		}
 
 		this.status = ReservationStatus.APPROVED;
+		this.adminMemo = adminMemo;
 	}
 
-	public void reject() {
+	public void reject(String adminMemo) {
 		if (this.status != ReservationStatus.PENDING) {
 			throw new BusinessException(ErrorCode.RESERVATION_NOT_PENDING);
 		}
 
 		this.status = ReservationStatus.REJECTED;
+		this.adminMemo = adminMemo;
 	}
 }

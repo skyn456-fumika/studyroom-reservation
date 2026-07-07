@@ -4,12 +4,16 @@ export const getAdminReservations = () => {
   return axiosInstance.get('/api/admin/reservations');
 };
 
-export const approveReservation = (reservationId) => {
-  return axiosInstance.patch(`/api/admin/reservations/${reservationId}/approve`);
+export const approveReservation = (reservationId, adminMemo) => {
+  return axiosInstance.patch(`/api/admin/reservations/${reservationId}/approve`, {
+    adminMemo,
+  });
 };
 
-export const rejectReservation = (reservationId) => {
-  return axiosInstance.patch(`/api/admin/reservations/${reservationId}/reject`);
+export const rejectReservation = (reservationId, adminMemo) => {
+  return axiosInstance.patch(`/api/admin/reservations/${reservationId}/reject`, {
+    adminMemo,
+  });
 };
 
 export const getAdminRooms = () => {

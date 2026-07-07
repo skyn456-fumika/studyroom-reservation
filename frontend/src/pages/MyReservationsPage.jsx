@@ -106,6 +106,12 @@ function MyReservationsPage() {
                   예약자: {reservation.userName}
                 </p>
 
+                {reservation.adminMemo && (
+                  <p className="reservation-memo">
+                    관리자 메모: {reservation.adminMemo}
+                  </p>
+                )}
+
                 {canCancelReservation(reservation.status) && (
                   <button
                     type="button"

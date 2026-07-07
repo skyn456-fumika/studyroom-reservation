@@ -81,6 +81,14 @@ function AdminPage() {
   };
 
   const handleApprove = async (reservationId) => {
+    const adminMemo = window.prompt(
+      '승인 메모를 입력해주세요. 비워두면 메모 없이 승인됩니다.'
+    );
+
+    if (adminMemo === null) {
+      return;
+    }
+
     if (!window.confirm('예약을 승인하시겠습니까?')) {
       return;
     }
@@ -88,7 +96,7 @@ function AdminPage() {
     try {
       setActionLoadingId(reservationId);
 
-      await approveReservation(reservationId);
+      await approveReservation(reservationId, adminMemo.trim());
 
       alert('예약이 승인되었습니다.');
       fetchReservations();
@@ -109,6 +117,14 @@ function AdminPage() {
   };
 
   const handleReject = async (reservationId) => {
+    const adminMemo = window.prompt(
+      '거절 사유를 입력해주세요. 비워두면 메모 없이 거절됩니다.'
+    );
+
+    if (adminMemo === null) {
+      return;
+    }
+
     if (!window.confirm('예약을 거절하시겠습니까?')) {
       return;
     }
@@ -116,7 +132,7 @@ function AdminPage() {
     try {
       setActionLoadingId(reservationId);
 
-      await rejectReservation(reservationId);
+      await rejectReservation(reservationId, adminMemo.trim());
 
       alert('예약이 거절되었습니다.');
       fetchReservations();

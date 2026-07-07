@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.studyroom.reservation.room.dto.RoomCreateRequest;
@@ -22,35 +23,36 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/admin/rooms")
 public class AdminRoomController {
 
 	private final RoomService roomService;
 
-	@GetMapping("/api/admin/rooms")
+	@GetMapping
 	public ResponseEntity<List<RoomResponse>> getRooms() {
 		List<RoomResponse> response = roomService.getAllRooms();
 		return ResponseEntity.ok(response);
 	}
 
-	@PostMapping("/api/admin/rooms")
+	@PostMapping
 	public ResponseEntity<RoomResponse> createRoom(@Valid @RequestBody RoomCreateRequest request) {
 		RoomResponse response = roomService.createRoom(request);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
-	@PutMapping("/api/admin/rooms/{roomId}")
+	@PutMapping("/{roomId}")
 	public ResponseEntity<RoomResponse> updateRoom(@PathVariable Long roomId, @Valid @RequestBody RoomUpdateRequest request) {
 		RoomResponse response = roomService.updateRoom(roomId, request);
 		return ResponseEntity.ok(response);
 	}
 
-	@PatchMapping("/api/admin/rooms/{roomId}/active")
+	@PatchMapping("/{roomId}/active")
 	public ResponseEntity<RoomResponse> activateRoom(@PathVariable Long roomId) {
 		RoomResponse response = roomService.activateRoom(roomId);
 		return ResponseEntity.ok(response);
 	}
 
-	@PatchMapping("/api/admin/rooms/{roomId}/inactive")
+	@PatchMapping("/{roomId}/inactive")
 	public ResponseEntity<RoomResponse> deactivateRoom(@PathVariable Long roomId) {
 		RoomResponse response = roomService.deactivateRoom(roomId);
 		return ResponseEntity.ok(response);

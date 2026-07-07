@@ -71,6 +71,12 @@ function AdminReservationList({
                   <p className="admin-reservation-user">
                     예약자: {reservation.userName}
                   </p>
+
+                  {reservation.adminMemo && (
+                    <p className="admin-reservation-memo">
+                      관리자 메모: {reservation.adminMemo}
+                    </p>
+                  )}
                 </div>
 
                 <span className={`status-badge ${reservation.status.toLowerCase()}`}>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.studyroom.reservation.reservation.dto.ReservationCreateRequest;
@@ -22,28 +23,28 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/reservations")
 public class ReservationController {
 
 	private final ReservationService reservationService;
 
-	@PostMapping("/api/reservations")
+	@PostMapping
 	public ResponseEntity<ReservationResponse> createReservation(@AuthenticationPrincipal CustomUserDetails userDetails,
 			@Valid @RequestBody ReservationCreateRequest request) {
 		ReservationResponse response = reservationService.createReservation(userDetails.getId(), request);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
-	@GetMapping("/api/reservations/me")
+	@GetMapping("/me")
 	public ResponseEntity<List<ReservationResponse>> getMyReservations(@AuthenticationPrincipal CustomUserDetails userDetails) {
 		List<ReservationResponse> response = reservationService.getMyReservations(userDetails.getId());
 		return ResponseEntity.ok(response);
 	}
 
-	@PatchMapping("/api/reservations/{reservationId}/cancel")
+	@PatchMapping("/{reservationId}/cancel")
 	public ResponseEntity<ReservationResponse> cancelReservation(@AuthenticationPrincipal CustomUserDetails userDetails,
 			@PathVariable Long reservationId) {
 		ReservationResponse response = reservationService.cancelReservation(userDetails.getId(), reservationId);
-
 		return ResponseEntity.ok(response);
 	}
 }

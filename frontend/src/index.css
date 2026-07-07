@@ -820,6 +820,17 @@ button {
   background-color: #f3f4f6;
 }
 
+.admin-reservation-memo,
+.reservation-memo {
+  margin-top: 8px;
+  padding: 10px 12px;
+  background-color: #f9fafb;
+  border-left: 4px solid #9ca3af;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #374151;
+}
+
 @media (max-width: 720px) {
   .admin-room-form-grid {
     grid-template-columns: 1fr;

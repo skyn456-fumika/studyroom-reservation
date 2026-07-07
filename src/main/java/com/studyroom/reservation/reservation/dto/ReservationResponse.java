@@ -27,9 +27,12 @@ public class ReservationResponse {
 
 	private ReservationStatus status;
 
+	private String adminMemo;
+
 	public static ReservationResponse from(Reservation reservation) {
 		return ReservationResponse.builder().id(reservation.getId()).roomId(reservation.getRoom().getId()).roomName(reservation.getRoom().getName())
 				.userId(reservation.getUser().getId()).userName(reservation.getUser().getName()).reservationDate(reservation.getReservationDate())
-				.startTime(reservation.getStartTime()).endTime(reservation.getEndTime()).status(reservation.getStatus()).build();
+				.startTime(reservation.getStartTime()).endTime(reservation.getEndTime()).status(reservation.getStatus())
+				.adminMemo(reservation.getAdminMemo()).build();
 	}
 }

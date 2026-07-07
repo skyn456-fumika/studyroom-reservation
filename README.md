@@ -403,6 +403,7 @@ WHERE email = 'admin@example.com';
 - 공통 예외 처리
 - BusinessException / ErrorCode 기반 비즈니스 예외 처리
 - 인증 실패와 권한 없음에 대한 401 / 403 응답 분리
+- 공간 이미지 URL 저장 및 조회
 
 ### Frontend
 
@@ -425,6 +426,7 @@ WHERE email = 'admin@example.com';
 - 환경변수를 통한 API URL 관리
 - 관리자 공간 관리 / 예약 관리 탭 UI 구현
 - 관리자 공간 관리 상태/검색 필터 구현
+- 공간 이미지 표시 및 이미지 URL 입력 기능
 
 ---
 
@@ -432,7 +434,7 @@ WHERE email = 'admin@example.com';
 
 - 화면 디자인 고도화
 - 예약 검색/필터 기능 추가
-- 공간 이미지 업로드 기능 추가
+- 실제 파일 업로드 기반 공간 이미지 관리 기능 추가
 - 예약 승인/거절 사유 입력 기능 추가
 - Refresh Token 적용
 - 배포 환경 구성

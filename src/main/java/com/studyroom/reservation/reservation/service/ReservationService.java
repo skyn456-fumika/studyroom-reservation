@@ -84,20 +84,20 @@ public class ReservationService {
 		return reservationRepository.findAllByOrderByReservationDateDescStartTimeDesc().stream().map(ReservationResponse::from).toList();
 	}
 
-	public ReservationResponse approveReservation(Long reservationId) {
+	public ReservationResponse approveReservation(Long reservationId, String adminMemo) {
 		Reservation reservation = reservationRepository.findById(reservationId)
 				.orElseThrow(() -> new BusinessException(ErrorCode.RESERVATION_NOT_FOUND));
 
-		reservation.approve();
+		reservation.approve(adminMemo);
 
 		return ReservationResponse.from(reservation);
 	}
 
-	public ReservationResponse rejectReservation(Long reservationId) {
+	public ReservationResponse rejectReservation(Long reservationId, String adminMemo) {
 		Reservation reservation = reservationRepository.findById(reservationId)
 				.orElseThrow(() -> new BusinessException(ErrorCode.RESERVATION_NOT_FOUND));
 
-		reservation.reject();
+		reservation.reject(adminMemo);
 
 		return ReservationResponse.from(reservation);
 	}
