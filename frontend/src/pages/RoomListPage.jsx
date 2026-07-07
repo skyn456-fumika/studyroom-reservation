@@ -18,7 +18,7 @@ function RoomListPage() {
       if (error.response?.status === 401 || error.response?.status === 403) {
         return;
       }
-      
+
       alert('공간 목록을 불러오지 못했습니다.');
     } finally {
       setLoading(false);
@@ -40,7 +40,19 @@ function RoomListPage() {
 
   return (
     <div>
-      <h1 className="page-title">스터디룸 목록</h1>
+      <div className="page-hero">
+        <div>
+          <p className="page-eyebrow">StudyRoom Reservation</p>
+          <h1 className="page-title">스터디룸 목록</h1>
+          <p className="page-description">
+            원하는 공간을 선택하고 날짜와 시간을 확인한 뒤 예약을 신청할 수 있습니다.
+          </p>
+        </div>
+
+        <span className="page-count-badge">
+          예약 가능 공간 {rooms.length}개
+        </span>
+      </div>
 
       {rooms.length === 0 ? (
         <div className="card">
@@ -50,10 +62,10 @@ function RoomListPage() {
         <div className="room-grid">
           {rooms.map((room) => (
             <div
-                className="room-card"
-                key={room.id}
-                onClick={() => navigate(`/rooms/${room.id}`)}
-                >
+              className="room-card"
+              key={room.id}
+              onClick={() => navigate(`/rooms/${room.id}`)}
+            >
               <div className="room-image-box">
                 {room.imageUrl ? (
                   <img src={room.imageUrl} alt={room.name} className="room-image" />
@@ -61,20 +73,24 @@ function RoomListPage() {
                   <div className="room-image-placeholder">이미지 없음</div>
                 )}
               </div>
-              <h2>{room.name}</h2>
 
-              <p className="room-description">{room.description}</p>
+              <div className="room-card-content">
+                <div className="room-card-title-row">
+                  <h2>{room.name}</h2>
+                  <span className="room-status">{room.status}</span>
+                </div>
 
-              <div className="room-info">
-                <p>위치: {room.location}</p>
-                <p>수용 인원: {room.capacity}명</p>
-                <p>시간당 가격: {room.hourlyPrice.toLocaleString()}원</p>
-                <p>
-                  운영 시간: {room.openHour}:00 ~ {room.closeHour}:00
-                </p>
+                <p className="room-description">{room.description}</p>
+
+                <div className="room-info">
+                  <p>📍 {room.location}</p>
+                  <p>👥 최대 {room.capacity}명</p>
+                  <p>💰 {room.hourlyPrice.toLocaleString()}원 / 시간</p>
+                  <p>
+                    🕒 {room.openHour}:00 ~ {room.closeHour}:00
+                  </p>
+                </div>
               </div>
-
-              <span className="room-status">{room.status}</span>
             </div>
           ))}
         </div>

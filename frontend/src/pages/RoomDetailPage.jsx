@@ -141,101 +141,111 @@ function RoomDetailPage() {
 
   return (
     <div>
-      <h1 className="page-title">{room.name}</h1>
-
-      <div className="card room-detail-card">
-        <div className="room-detail-image-box">
-          {room.imageUrl ? (
-            <img src={room.imageUrl} alt={room.name} className="room-detail-image" />
-          ) : (
-            <div className="room-detail-image-placeholder">이미지 없음</div>
-          )}
-        </div>
-
-        <p className="room-detail-description">{room.description}</p>
-
-        <div className="detail-info">
-          <p>
-            <strong>위치</strong>
-            <span>{room.location}</span>
-          </p>
-
-          <p>
-            <strong>수용 인원</strong>
-            <span>{room.capacity}명</span>
-          </p>
-
-          <p>
-            <strong>시간당 가격</strong>
-            <span>{room.hourlyPrice.toLocaleString()}원</span>
-          </p>
-
-          <p>
-            <strong>운영 시간</strong>
-            <span>
-              {room.openHour}:00 ~ {room.closeHour}:00
-            </span>
-          </p>
-
-          <p>
-            <strong>상태</strong>
-            <span>{room.status}</span>
+      <div className="page-hero">
+        <div>
+          <p className="page-eyebrow">Room Detail</p>
+          <h1 className="page-title">{room.name}</h1>
+          <p className="page-description">
+            공간 정보를 확인하고 원하는 날짜의 예약 가능 시간을 선택하세요.
           </p>
         </div>
       </div>
 
-      <div className="card reservation-card">
-        <h2 className="section-title">예약 가능 시간</h2>
+      <div className="room-detail-layout">
+        <div className="card room-detail-card">
+          <div className="room-detail-image-box">
+            {room.imageUrl ? (
+              <img src={room.imageUrl} alt={room.name} className="room-detail-image" />
+            ) : (
+              <div className="room-detail-image-placeholder">이미지 없음</div>
+            )}
+          </div>
 
-        <div className="date-field">
-          <label>예약 날짜</label>
-          <input
-            type="date"
-            value={selectedDate}
-            min={today}
-            onChange={handleDateChange}
-          />
+          <p className="room-detail-description">{room.description}</p>
+
+          <div className="detail-info">
+            <p>
+              <strong>위치</strong>
+              <span>{room.location}</span>
+            </p>
+
+            <p>
+              <strong>수용 인원</strong>
+              <span>{room.capacity}명</span>
+            </p>
+
+            <p>
+              <strong>시간당 가격</strong>
+              <span>{room.hourlyPrice.toLocaleString()}원</span>
+            </p>
+
+            <p>
+              <strong>운영 시간</strong>
+              <span>
+                {room.openHour}:00 ~ {room.closeHour}:00
+              </span>
+            </p>
+
+            <p>
+              <strong>상태</strong>
+              <span>{room.status}</span>
+            </p>
+          </div>
         </div>
 
-        {timeLoading ? (
-          <p className="loading-text">시간대를 불러오는 중...</p>
-        ) : availableTimes.length === 0 ? (
-          <p className="empty-text">조회 가능한 시간대가 없습니다.</p>
-        ) : (
-          <>
-            <div className="time-grid">
-              {availableTimes.map((time) => (
-                <button
-                  type="button"
-                  key={`${time.startTime}-${time.endTime}`}
-                  className={`time-button 
-                    ${time.available ? '' : 'disabled'} 
-                    ${selectedTime?.startTime === time.startTime ? 'selected' : ''}
-                  `}
-                  disabled={!time.available}
-                  onClick={() => setSelectedTime(time)}
-                >
-                  {time.startTime.slice(0, 5)} ~ {time.endTime.slice(0, 5)}
-                </button>
-              ))}
-            </div>
+        <div className="card reservation-card">
+          <h2 className="section-title">예약 가능 시간</h2>
 
-            {selectedTime && (
-              <div className="selected-time-box">
-                선택 시간: {selectedTime.startTime.slice(0, 5)} ~ {selectedTime.endTime.slice(0, 5)}
+          <div className="date-field">
+            <label>예약 날짜</label>
+            <input
+              type="date"
+              value={selectedDate}
+              min={today}
+              onChange={handleDateChange}
+            />
+          </div>
+
+          {timeLoading ? (
+            <p className="loading-text">시간대를 불러오는 중...</p>
+          ) : availableTimes.length === 0 ? (
+            <p className="empty-text">조회 가능한 시간대가 없습니다.</p>
+          ) : (
+            <>
+              <div className="time-grid">
+                {availableTimes.map((time) => (
+                  <button
+                    type="button"
+                    key={`${time.startTime}-${time.endTime}`}
+                    className={`time-button 
+                      ${time.available ? '' : 'disabled'} 
+                      ${selectedTime?.startTime === time.startTime ? 'selected' : ''}
+                    `}
+                    disabled={!time.available}
+                    onClick={() => setSelectedTime(time)}
+                  >
+                    {time.startTime.slice(0, 5)} ~ {time.endTime.slice(0, 5)}
+                  </button>
+                ))}
               </div>
-            )}
 
-            <button
-              type="button"
-              className="primary-button reservation-submit-button"
-              onClick={handleReservation}
-              disabled={reservationLoading || !selectedTime}
-            >
-              {reservationLoading ? '예약 신청 중...' : '예약 신청'}
-            </button>
-          </>
-        )}
+              {selectedTime && (
+                <div className="selected-time-box">
+                  선택 시간: {selectedTime.startTime.slice(0, 5)} ~ {selectedTime.endTime.slice(0, 5)}
+                </div>
+              )}
+
+              <button
+                type="button"
+                className="primary-button reservation-submit-button"
+                onClick={handleReservation}
+                disabled={reservationLoading || !selectedTime}
+              >
+                {reservationLoading ? '예약 신청 중...' : '예약 신청'}
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
