@@ -47,6 +47,9 @@ public class User {
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
 
+	@Column(length = 500)
+	private String refreshToken;
+
 	@Builder
 	private User(String email, String name, String password, UserRole role, boolean active) {
 		this.email = email;
@@ -65,5 +68,13 @@ public class User {
 		}
 
 		this.active = true;
+	}
+
+	public void updateRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
+
+	public void clearRefreshToken() {
+		this.refreshToken = null;
 	}
 }

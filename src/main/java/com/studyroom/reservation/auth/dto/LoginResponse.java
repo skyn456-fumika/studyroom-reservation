@@ -11,6 +11,7 @@ import lombok.Getter;
 public class LoginResponse {
 
 	private String accessToken;
+	private String refreshToken;
 	private String tokenType;
 
 	private Long userId;
@@ -18,8 +19,8 @@ public class LoginResponse {
 	private String name;
 	private UserRole role;
 
-	public static LoginResponse of(String accessToken, User user) {
-		return LoginResponse.builder().accessToken(accessToken).tokenType("Bearer").userId(user.getId()).email(user.getEmail()).name(user.getName())
-				.role(user.getRole()).build();
+	public static LoginResponse of(String accessToken, String refreshToken, User user) {
+		return LoginResponse.builder().accessToken(accessToken).refreshToken(refreshToken).tokenType("Bearer").userId(user.getId())
+				.email(user.getEmail()).name(user.getName()).role(user.getRole()).build();
 	}
 }

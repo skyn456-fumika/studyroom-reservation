@@ -18,7 +18,10 @@ spring:
 
 jwt:
   secret: your-jwt-secret-key-must-be-at-least-32-bytes
-  expiration: 3600000
+# 30분(1800000)
+  expiration: 1800000
+# 14일(1209600000)
+  refresh-expiration: 1209600000
 
 springdoc:
   swagger-ui:

@@ -42,6 +42,7 @@ function LoginPage() {
       const data = response.data;
 
       localStorage.setItem('accessToken', data.accessToken);
+      localStorage.setItem('refreshToken', data.refreshToken);
       localStorage.setItem('userId', data.userId);
       localStorage.setItem('userEmail', data.email);
       localStorage.setItem('userName', data.name);

@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.studyroom.reservation.auth.dto.LoginRequest;
 import com.studyroom.reservation.auth.dto.LoginResponse;
+import com.studyroom.reservation.auth.dto.RefreshTokenRequest;
 import com.studyroom.reservation.auth.dto.SignupRequest;
 import com.studyroom.reservation.auth.dto.SignupResponse;
+import com.studyroom.reservation.auth.dto.TokenRefreshResponse;
 import com.studyroom.reservation.auth.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -32,6 +34,12 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
 		LoginResponse response = authService.login(request);
+		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping("/refresh")
+	public ResponseEntity<TokenRefreshResponse> refresh(@Valid @RequestBody RefreshTokenRequest request) {
+		TokenRefreshResponse response = authService.refresh(request);
 		return ResponseEntity.ok(response);
 	}
 }

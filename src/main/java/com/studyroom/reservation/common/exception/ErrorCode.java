@@ -28,7 +28,10 @@ public enum ErrorCode {
 	RESERVATION_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 예약된 시간대입니다."), RESERVATION_PAST_TIME(HttpStatus.BAD_REQUEST, "지난 시간은 예약할 수 없습니다."),
 	RESERVATION_ALREADY_CANCELED(HttpStatus.BAD_REQUEST, "이미 취소된 예약입니다."),
 	RESERVATION_ALREADY_REJECTED(HttpStatus.BAD_REQUEST, "거절된 예약은 취소할 수 없습니다."),
-	RESERVATION_NOT_PENDING(HttpStatus.BAD_REQUEST, "승인 대기 중인 예약만 처리할 수 있습니다.");
+	RESERVATION_NOT_PENDING(HttpStatus.BAD_REQUEST, "승인 대기 중인 예약만 처리할 수 있습니다."),
+
+	// Refresh Token
+	INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "Refresh Token이 유효하지 않습니다.");
 
 	private final HttpStatus status;
 	private final String message;

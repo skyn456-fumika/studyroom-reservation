@@ -6,8 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.studyroom.reservation.auth.dto.LoginRequest;
 import com.studyroom.reservation.auth.dto.LoginResponse;
+import com.studyroom.reservation.auth.dto.RefreshTokenRequest;
 import com.studyroom.reservation.auth.dto.SignupRequest;
 import com.studyroom.reservation.auth.dto.SignupResponse;
+import com.studyroom.reservation.auth.dto.TokenRefreshResponse;
 import com.studyroom.reservation.common.exception.BusinessException;
 import com.studyroom.reservation.common.exception.ErrorCode;
 import com.studyroom.reservation.security.JwtTokenProvider;
@@ -39,7 +41,6 @@ public class AuthService {
 		return SignupResponse.from(savedUser);
 	}
 
-	@Transactional(readOnly = true)
 	public LoginResponse login(LoginRequest request) {
 		User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new BusinessException(ErrorCode.INVALID_LOGIN_INFO));
 
@@ -52,7 +53,34 @@ public class AuthService {
 		}
 
 		String accessToken = jwtTokenProvider.createAccessToken(user);
+		String refreshToken = jwtTokenProvider.createRefreshToken(user);
 
-		return LoginResponse.of(accessToken, user);
+		user.updateRefreshToken(refreshToken);
+
+		return LoginResponse.of(accessToken, refreshToken, user);
+	}
+
+	public TokenRefreshResponse refresh(RefreshTokenRequest request) {
+		String refreshToken = request.getRefreshToken();
+
+		if (!jwtTokenProvider.validateToken(refreshToken)) {
+			throw new BusinessException(ErrorCode.INVALID_REFRESH_TOKEN);
+		}
+
+		Long userId = jwtTokenProvider.getUserId(refreshToken);
+
+		User user = userRepository.findById(userId).orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+		if (!user.isActive()) {
+			throw new BusinessException(ErrorCode.USER_NOT_FOUND);
+		}
+
+		if (user.getRefreshToken() == null || !user.getRefreshToken().equals(refreshToken)) {
+			throw new BusinessException(ErrorCode.INVALID_REFRESH_TOKEN);
+		}
+
+		String newAccessToken = jwtTokenProvider.createAccessToken(user);
+
+		return new TokenRefreshResponse(newAccessToken, "Bearer");
 	}
 }
