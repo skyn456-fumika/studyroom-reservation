@@ -23,6 +23,11 @@
 - 헤더 모바일 메뉴 및 반응형 레이아웃 적용
 - 공간 목록/상세/예약 화면 UI 개선
 - 관리자 페이지 대시보드 요약 및 반응형 UI 개선
+- Access Token / Refresh Token 기반 인증 구조 적용
+- Axios Interceptor 기반 Access Token 자동 재발급 처리
+- 실제 파일 업로드 기반 공간 이미지 관리 기능 구현
+- 관리자 통계 대시보드 구현
+- 승인 예약 기준 총 예상 매출 계산 기능 구현
 
 ---
 
@@ -103,6 +108,11 @@
 - 공간 수정
 - 공간 활성화
 - 공간 비활성화
+- 공간 이미지 파일 업로드
+- 관리자 통계 대시보드 조회
+- 전체/상태별 예약 통계 조회
+- 활성/비활성 공간 통계 조회
+- 승인 예약 기준 총 예상 매출 조회
 
 ### 공통 기능
 
@@ -115,6 +125,8 @@
 - CORS 설정
 - 반응형 UI 적용
 - 모바일 헤더 메뉴 적용
+- Refresh Token 기반 Access Token 재발급
+- Axios Interceptor를 통한 토큰 만료 자동 처리
 
 ---
 
@@ -183,6 +195,7 @@ studyroom-reservation
 |---|---|---|
 | POST | `/api/auth/signup` | 회원가입 |
 | POST | `/api/auth/login` | 로그인 |
+| POST | `/api/auth/refresh` | Access Token 재발급 |
 
 ### User
 
@@ -213,6 +226,7 @@ studyroom-reservation
 |---|---|---|
 | GET | `/api/admin/rooms` | 관리자 전체 공간 목록 조회 |
 | POST | `/api/admin/rooms` | 공간 등록 |
+| POST | `/api/admin/rooms/images` | 공간 이미지 업로드 |
 | PUT | `/api/admin/rooms/{roomId}` | 공간 수정 |
 | PATCH | `/api/admin/rooms/{roomId}/active` | 공간 활성화 |
 | PATCH | `/api/admin/rooms/{roomId}/inactive` | 공간 비활성화 |
@@ -232,6 +246,12 @@ studyroom-reservation
   "adminMemo": "예약 승인합니다."
 }
 ```
+
+### Admin Statistics
+
+| Method | URL | 설명 |
+|---|---|---|
+| GET | `/api/admin/statistics` | 관리자 대시보드 통계 조회 |
 
 ---
 
@@ -280,7 +300,7 @@ AND
 
 ---
 
-## 실행 방법
+## 로컬 개발 실행 방법
 
 ### Backend 실행
 
@@ -329,6 +349,17 @@ src/main/resources/static
 
 이후 프로젝트 루트에서 Spring Boot jar 파일을 빌드합니다.
 
+Windows 개발 환경:
+```bash
+npm run build:copy
+```
+
+Linux/macOS 또는 배포 서버:
+```bash
+npm run build
+```
+빌드 결과 dist 내용을 src/main/resources/static 으로 복사
+
 ```bash
 cd ..
 mvn clean package
@@ -344,7 +375,19 @@ java -jar target/reservation-0.0.1-SNAPSHOT.jar
 
 http://localhost:8095
 
+### 업로드 파일 저장 경로
 
+공간 이미지 업로드 파일은 애플리케이션 실행 위치 기준 `uploads/rooms` 폴더에 저장됩니다.
+
+예를 들어 프로젝트 루트에서 jar를 실행하면 다음 위치에 이미지가 저장됩니다.
+
+```text
+studyroom-reservation/uploads/rooms
+```
+
+업로드 파일은 Git에 포함하지 않으며, `.gitignore`에서 `uploads/` 폴더를 제외합니다.
+
+배포 환경에서는 jar 파일을 재배포하더라도 업로드 이미지가 유지되도록 `uploads` 폴더를 별도로 관리해야 합니다.
 
 ---
 
@@ -431,6 +474,14 @@ WHERE email = 'admin@example.com';
 - 공간 이미지 URL 저장 및 조회
 - 예약 승인/거절 시 관리자 메모 저장
 - 컨트롤러 공통 RequestMapping 기반 URL 매핑 방식 통일
+- Refresh Token 발급 및 검증
+- Access Token 재발급 API
+- 공간 이미지 파일 업로드 API
+- 업로드 이미지 정적 리소스 제공
+- 관리자 통계 API
+- 예약 상태별 통계 조회
+- 공간 상태별 통계 조회
+- 승인 예약 기준 총 예상 매출 계산
 
 ### Frontend
 
@@ -464,17 +515,23 @@ WHERE email = 'admin@example.com';
 - 관리자 페이지 대시보드 요약 UI 구현
 - 관리자 예약 관리 상태/검색 필터 구현
 - 관리자 페이지 반응형 UI 개선
+- Refresh Token 기반 Access Token 자동 재발급 처리
+- 관리자 공간 이미지 업로드 UI
+- 이미지 업로드 후 미리보기 표시
+- 관리자 통계 대시보드 카드 UI
+- 총 예상 매출 표시
 
 ---
 
 ## 향후 개선 사항
 
-- 실제 파일 업로드 기반 공간 이미지 관리 기능 추가
-- Refresh Token 적용
 - 배포 환경 구성
 - Docker 적용
 - GitHub Actions 기반 CI/CD 구성
-- 예약 통계 및 관리자 리포트 기능 추가
+- 관리자 통계 차트 시각화
+- 날짜/월별 매출 통계
+- Refresh Token Rotation 적용
+- 업로드 이미지 삭제 및 교체 시 기존 파일 정리
 
 ---
 
@@ -483,3 +540,43 @@ WHERE email = 'admin@example.com';
 이 프로젝트는 Spring Boot와 React를 활용한 풀스택 웹 애플리케이션 구현 경험을 정리하기 위한 포트폴리오 프로젝트입니다.
 
 JWT 인증, 권한 제어, REST API 설계, 예약 중복 방지 로직, 관리자 기능, React 기반 화면 구현을 중심으로 개발했습니다.
+
+---
+
+## 배포용 빌드 및 실행 순서
+
+### 1. 프론트엔드 빌드
+
+```bash
+cd frontend
+npm install
+npm run build:copy
+```
+
+### 2. 백엔드 jar 빌드
+
+```bash
+cd ..
+mvn clean package
+```
+
+### 3. application.yml 준비
+
+`src/main/resources/application-example.yml`을 참고하여 실제 DB 계정과 JWT secret을 포함한 `application.yml`을 준비합니다.
+
+### 4. jar 실행
+
+```bash
+java -jar target/reservation-0.0.1-SNAPSHOT.jar
+```
+
+### 5. 접속 확인
+
+http://localhost:8095
+http://localhost:8095/swagger-ui.html
+
+### 6. 업로드 폴더 확인
+
+이미지 업로드 후 실행 위치 기준으로 다음 폴더가 생성되는지 확인합니다.
+
+`uploads/rooms`
