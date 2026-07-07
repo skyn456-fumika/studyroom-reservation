@@ -20,6 +20,10 @@ export const getAdminRooms = () => {
   return axiosInstance.get('/api/admin/rooms');
 };
 
+export const getAdminStatistics = () => {
+  return axiosInstance.get('/api/admin/statistics');
+};
+
 export const createRoom = (data) => {
   return axiosInstance.post('/api/admin/rooms', data);
 };

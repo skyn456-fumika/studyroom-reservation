@@ -5,6 +5,7 @@ import {
   approveReservation,
   rejectReservation,
   getAdminRooms,
+  getAdminStatistics,
   createRoom,
   updateRoom,
   uploadRoomImage,
@@ -27,9 +28,22 @@ const initialRoomForm = {
   imageUrl: '',
 };
 
+const initialStatistics = {
+  totalRooms: 0,
+  activeRooms: 0,
+  inactiveRooms: 0,
+  totalReservations: 0,
+  pendingReservations: 0,
+  approvedReservations: 0,
+  rejectedReservations: 0,
+  canceledReservations: 0,
+  totalRevenue: 0,
+};
+
 function AdminPage() {
   const [reservations, setReservations] = useState([]);
   const [rooms, setRooms] = useState([]);
+  const [statistics, setStatistics] = useState(initialStatistics);
 
   const [activeTab, setActiveTab] = useState('rooms');
 
@@ -58,6 +72,11 @@ function AdminPage() {
     setRooms(response.data);
   };
 
+  const fetchStatistics = async () => {
+    const response = await getAdminStatistics();
+    setStatistics(response.data);
+  };
+
   const fetchAdminData = async () => {
     try {
       setLoading(true);
@@ -65,6 +84,7 @@ function AdminPage() {
       await Promise.all([
         fetchReservations(),
         fetchRooms(),
+        fetchStatistics(),
       ]);
     } catch (error) {
       console.error(error);
@@ -102,6 +122,7 @@ function AdminPage() {
 
       alert('예약이 승인되었습니다.');
       fetchReservations();
+      fetchStatistics();
     } catch (error) {
       console.error(error);
 
@@ -138,6 +159,7 @@ function AdminPage() {
 
       alert('예약이 거절되었습니다.');
       fetchReservations();
+      fetchStatistics();
     } catch (error) {
       console.error(error);
 
@@ -278,6 +300,7 @@ function AdminPage() {
       setRoomForm(initialRoomForm);
       setEditingRoomId(null);
       fetchRooms();
+      fetchStatistics();
     } catch (error) {
       console.error(error);
 
@@ -340,6 +363,7 @@ function AdminPage() {
       }
 
       fetchRooms();
+      fetchStatistics();
     } catch (error) {
       console.error(error);
 
@@ -352,6 +376,10 @@ function AdminPage() {
 
       alert(message);
     }
+  };
+
+  const formatPrice = (price) => {
+    return Number(price).toLocaleString('ko-KR');
   };
 
   useEffect(() => {
@@ -408,15 +436,37 @@ function AdminPage() {
           </p>
         </div>
 
-        <div className="admin-summary">
+        <div className="admin-summary admin-statistics-summary">
           <div className="admin-summary-card">
             <span className="admin-summary-label">전체 공간</span>
-            <strong>{rooms.length}개</strong>
+            <strong>{statistics.totalRooms}개</strong>
+            <p className="admin-summary-detail">
+              활성 {statistics.activeRooms}개 / 비활성 {statistics.inactiveRooms}개
+            </p>
           </div>
 
           <div className="admin-summary-card">
             <span className="admin-summary-label">전체 예약</span>
-            <strong>{reservations.length}건</strong>
+            <strong>{statistics.totalReservations}건</strong>
+            <p className="admin-summary-detail">
+              대기 {statistics.pendingReservations}건
+            </p>
+          </div>
+
+          <div className="admin-summary-card">
+            <span className="admin-summary-label">승인 예약</span>
+            <strong>{statistics.approvedReservations}건</strong>
+            <p className="admin-summary-detail">
+              거절 {statistics.rejectedReservations}건 / 취소 {statistics.canceledReservations}건
+            </p>
+          </div>
+
+          <div className="admin-summary-card revenue-card">
+            <span className="admin-summary-label">총 예상 매출</span>
+            <strong>{formatPrice(statistics.totalRevenue)}원</strong>
+            <p className="admin-summary-detail">
+              승인된 예약 기준
+            </p>
           </div>
         </div>
       </div>
