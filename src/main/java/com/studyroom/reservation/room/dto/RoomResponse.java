@@ -19,10 +19,11 @@ public class RoomResponse {
 	private int openHour;
 	private int closeHour;
 	private RoomStatus status;
+	private String imageUrl;
 
 	public static RoomResponse from(Room room) {
 		return RoomResponse.builder().id(room.getId()).name(room.getName()).description(room.getDescription()).location(room.getLocation())
 				.capacity(room.getCapacity()).hourlyPrice(room.getHourlyPrice()).openHour(room.getOpenHour()).closeHour(room.getCloseHour())
-				.status(room.getStatus()).build();
+				.status(room.getStatus()).imageUrl(room.getImageUrl()).build();
 	}
 }

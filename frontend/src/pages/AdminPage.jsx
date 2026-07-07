@@ -23,6 +23,7 @@ const initialRoomForm = {
   hourlyPrice: 0,
   openHour: 9,
   closeHour: 22,
+  imageUrl: '',
 };
 
 function AdminPage() {
@@ -187,6 +188,7 @@ function AdminPage() {
       hourlyPrice: Number(roomForm.hourlyPrice),
       openHour: Number(roomForm.openHour),
       closeHour: Number(roomForm.closeHour),
+      imageUrl: roomForm.imageUrl,
     };
   };
 
@@ -240,6 +242,7 @@ function AdminPage() {
       hourlyPrice: room.hourlyPrice,
       openHour: room.openHour,
       closeHour: room.closeHour,
+      imageUrl: room.imageUrl || '',
     });
 
     window.scrollTo({

@@ -37,4 +37,6 @@ public class RoomUpdateRequest {
 	@Min(value = 1, message = "운영 종료 시간은 1시 이상이어야 합니다.")
 	@Max(value = 24, message = "운영 종료 시간은 24시 이하이어야 합니다.")
 	private int closeHour;
+
+	private String imageUrl;
 }

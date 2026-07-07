@@ -63,8 +63,12 @@ public class Room {
 	@Column(nullable = false)
 	private LocalDateTime createdAt;
 
+	@Column(length = 1000)
+	private String imageUrl;
+
 	@Builder
-	private Room(String name, String description, String location, int capacity, int hourlyPrice, int openHour, int closeHour, RoomStatus status) {
+	private Room(String name, String description, String location, int capacity, int hourlyPrice, int openHour, int closeHour, RoomStatus status,
+			String imageUrl) {
 		this.name = name;
 		this.description = description;
 		this.location = location;
@@ -73,6 +77,7 @@ public class Room {
 		this.openHour = openHour;
 		this.closeHour = closeHour;
 		this.status = status;
+		this.imageUrl = imageUrl;
 	}
 
 	@PrePersist
@@ -84,7 +89,8 @@ public class Room {
 		}
 	}
 
-	public void update(String name, String description, String location, int capacity, int hourlyPrice, int openHour, int closeHour) {
+	public void update(String name, String description, String location, int capacity, int hourlyPrice, int openHour, int closeHour,
+			String imageUrl) {
 		this.name = name;
 		this.description = description;
 		this.location = location;
@@ -92,6 +98,7 @@ public class Room {
 		this.hourlyPrice = hourlyPrice;
 		this.openHour = openHour;
 		this.closeHour = closeHour;
+		this.imageUrl = imageUrl;
 	}
 
 	public void activate() {

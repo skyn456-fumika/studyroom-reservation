@@ -54,6 +54,13 @@ function RoomListPage() {
                 key={room.id}
                 onClick={() => navigate(`/rooms/${room.id}`)}
                 >
+              <div className="room-image-box">
+                {room.imageUrl ? (
+                  <img src={room.imageUrl} alt={room.name} className="room-image" />
+                ) : (
+                  <div className="room-image-placeholder">이미지 없음</div>
+                )}
+              </div>
               <h2>{room.name}</h2>
 
               <p className="room-description">{room.description}</p>

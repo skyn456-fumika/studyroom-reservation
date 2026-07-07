@@ -57,6 +57,14 @@ function AdminRoomList({
                   </span>
                 </div>
 
+                <div className="admin-room-image-box">
+                  {room.imageUrl ? (
+                    <img src={room.imageUrl} alt={room.name} className="admin-room-image" />
+                  ) : (
+                    <div className="admin-room-image-placeholder">이미지 없음</div>
+                  )}
+                </div>
+
                 <p className="admin-room-description">{room.description}</p>
 
                 <div className="admin-room-info">

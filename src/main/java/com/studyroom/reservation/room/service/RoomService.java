@@ -28,7 +28,7 @@ public class RoomService {
 
 		Room room = Room.builder().name(request.getName()).description(request.getDescription()).location(request.getLocation())
 				.capacity(request.getCapacity()).hourlyPrice(request.getHourlyPrice()).openHour(request.getOpenHour())
-				.closeHour(request.getCloseHour()).status(RoomStatus.ACTIVE).build();
+				.closeHour(request.getCloseHour()).status(RoomStatus.ACTIVE).imageUrl(request.getImageUrl()).build();
 
 		Room savedRoom = roomRepository.save(room);
 
@@ -63,7 +63,7 @@ public class RoomService {
 		Room room = roomRepository.findById(roomId).orElseThrow(() -> new BusinessException(ErrorCode.ROOM_NOT_FOUND));
 
 		room.update(request.getName(), request.getDescription(), request.getLocation(), request.getCapacity(), request.getHourlyPrice(),
-				request.getOpenHour(), request.getCloseHour());
+				request.getOpenHour(), request.getCloseHour(), request.getImageUrl());
 
 		return RoomResponse.from(room);
 	}

@@ -144,6 +144,14 @@ function RoomDetailPage() {
       <h1 className="page-title">{room.name}</h1>
 
       <div className="card room-detail-card">
+        <div className="room-detail-image-box">
+          {room.imageUrl ? (
+            <img src={room.imageUrl} alt={room.name} className="room-detail-image" />
+          ) : (
+            <div className="room-detail-image-placeholder">이미지 없음</div>
+          )}
+        </div>
+
         <p className="room-detail-description">{room.description}</p>
 
         <div className="detail-info">
