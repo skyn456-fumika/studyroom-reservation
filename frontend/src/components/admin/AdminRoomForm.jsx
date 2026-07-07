@@ -2,9 +2,11 @@ function AdminRoomForm({
   roomForm,
   editingRoomId,
   roomSaving,
+  imageUploading,
   onChange,
   onSubmit,
   onCancelEdit,
+  onImageUpload,
 }) {
   return (
     <div className="card admin-room-form-card">
@@ -84,14 +86,44 @@ function AdminRoomForm({
         </div>
 
         <div className="form-group">
-          <label>이미지 URL</label>
+          <label>공간 이미지</label>
+
+          <div className="room-image-upload-box">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => onImageUpload(e.target.files[0])}
+              disabled={imageUploading}
+            />
+
+            <p className="image-upload-help">
+              이미지 파일을 선택하면 서버에 업로드되고, 이미지 URL이 자동 입력됩니다.
+            </p>
+          </div>
+
+          {roomForm.imageUrl && (
+            <div className="room-image-preview-box">
+              <img
+                src={roomForm.imageUrl}
+                alt="공간 이미지 미리보기"
+                className="room-image-preview"
+              />
+            </div>
+          )}
+
           <input
             type="text"
             name="imageUrl"
             value={roomForm.imageUrl}
             onChange={onChange}
-            placeholder="https://example.com/room-image.jpg"
+            placeholder="이미지 URL이 자동 입력됩니다. 직접 입력도 가능합니다."
           />
+
+          {imageUploading && (
+            <p className="image-upload-status">
+              이미지 업로드 중...
+            </p>
+          )}
         </div>
 
         <div className="form-group">

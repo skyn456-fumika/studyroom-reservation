@@ -7,6 +7,7 @@ import {
   getAdminRooms,
   createRoom,
   updateRoom,
+  uploadRoomImage,
   activateRoom,
   deactivateRoom,
 } from '../api/adminApi';
@@ -45,6 +46,7 @@ function AdminPage() {
   const [roomForm, setRoomForm] = useState(initialRoomForm);
   const [editingRoomId, setEditingRoomId] = useState(null);
   const [roomSaving, setRoomSaving] = useState(false);
+  const [imageUploading, setImageUploading] = useState(false);
 
   const fetchReservations = async () => {
     const response = await getAdminReservations();
@@ -159,6 +161,51 @@ function AdminPage() {
       ...roomForm,
       [name]: value,
     });
+  };
+
+  const handleRoomImageUpload = async (file) => {
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      alert('이미지 파일만 업로드할 수 있습니다.');
+      return;
+    }
+
+    try {
+      setImageUploading(true);
+
+      const response = await uploadRoomImage(file);
+
+      const uploadedImageUrl = response.data.imageUrl;
+
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
+
+      const imageUrl = uploadedImageUrl.startsWith('http')
+        ? uploadedImageUrl
+        : `${apiBaseUrl}${uploadedImageUrl}`;
+
+      setRoomForm((prev) => ({
+        ...prev,
+        imageUrl,
+      }));
+
+      alert('이미지가 업로드되었습니다.');
+    } catch (error) {
+      console.error(error);
+
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        return;
+      }
+
+      const message =
+        error.response?.data?.message || '이미지 업로드에 실패했습니다.';
+
+      alert(message);
+    } finally {
+      setImageUploading(false);
+    }
   };
 
   const validateRoomForm = () => {
@@ -405,9 +452,11 @@ function AdminPage() {
             roomForm={roomForm}
             editingRoomId={editingRoomId}
             roomSaving={roomSaving}
+            imageUploading={imageUploading}
             onChange={handleRoomFormChange}
             onSubmit={handleRoomSubmit}
             onCancelEdit={handleCancelEdit}
+            onImageUpload={handleRoomImageUpload}
           />
 
           <AdminRoomList

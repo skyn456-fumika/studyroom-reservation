@@ -11,11 +11,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.studyroom.reservation.room.dto.RoomCreateRequest;
+import com.studyroom.reservation.room.dto.RoomImageUploadResponse;
 import com.studyroom.reservation.room.dto.RoomResponse;
 import com.studyroom.reservation.room.dto.RoomUpdateRequest;
+import com.studyroom.reservation.room.service.RoomImageService;
 import com.studyroom.reservation.room.service.RoomService;
 
 import jakarta.validation.Valid;
@@ -27,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class AdminRoomController {
 
 	private final RoomService roomService;
+	private final RoomImageService roomImageService;
 
 	@GetMapping
 	public ResponseEntity<List<RoomResponse>> getRooms() {
@@ -38,6 +43,12 @@ public class AdminRoomController {
 	public ResponseEntity<RoomResponse> createRoom(@Valid @RequestBody RoomCreateRequest request) {
 		RoomResponse response = roomService.createRoom(request);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	}
+
+	@PostMapping("/images")
+	public ResponseEntity<RoomImageUploadResponse> uploadRoomImage(@RequestParam("file") MultipartFile file) {
+		String imageUrl = roomImageService.uploadRoomImage(file);
+		return ResponseEntity.ok(new RoomImageUploadResponse(imageUrl));
 	}
 
 	@PutMapping("/{roomId}")

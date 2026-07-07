@@ -35,10 +35,11 @@ public class SecurityConfig {
 				.exceptionHandling(exception -> exception.authenticationEntryPoint(customAuthenticationEntryPoint)
 						.accessDeniedHandler(customAccessDeniedHandler))
 				.authorizeHttpRequests(auth -> auth.requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
-						.requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/users/me").authenticated().requestMatchers("/api/admin/**")
-						.hasRole("ADMIN").requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/rooms/**").permitAll()
-						.requestMatchers("/api/users/me").authenticated().requestMatchers("/api/reservations/**").authenticated()
-						.requestMatchers("/api/admin/**").hasRole("ADMIN").anyRequest().permitAll())
+						.requestMatchers("/uploads/**").permitAll().requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/users/me")
+						.authenticated().requestMatchers("/api/admin/**").hasRole("ADMIN").requestMatchers("/api/auth/**").permitAll()
+						.requestMatchers("/api/rooms/**").permitAll().requestMatchers("/api/users/me").authenticated()
+						.requestMatchers("/api/reservations/**").authenticated().requestMatchers("/api/admin/**").hasRole("ADMIN").anyRequest()
+						.permitAll())
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();

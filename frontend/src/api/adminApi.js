@@ -28,6 +28,17 @@ export const updateRoom = (roomId, data) => {
   return axiosInstance.put(`/api/admin/rooms/${roomId}`, data);
 };
 
+export const uploadRoomImage = (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  return axiosInstance.post('/api/admin/rooms/images', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
 export const activateRoom = (roomId) => {
   return axiosInstance.patch(`/api/admin/rooms/${roomId}/active`);
 };
@@ -35,3 +46,4 @@ export const activateRoom = (roomId) => {
 export const deactivateRoom = (roomId) => {
   return axiosInstance.patch(`/api/admin/rooms/${roomId}/inactive`);
 };
+

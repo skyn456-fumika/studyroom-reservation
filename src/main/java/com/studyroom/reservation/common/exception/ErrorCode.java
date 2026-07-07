@@ -17,8 +17,9 @@ public enum ErrorCode {
 	INVALID_LOGIN_INFO(HttpStatus.UNAUTHORIZED, "이메일 또는 비밀번호가 일치하지 않습니다."),
 
 	// Room
-	ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "공간을 찾을 수 없습니다."), ROOM_INACTIVE(HttpStatus.BAD_REQUEST, "예약 가능한 공간이 아닙니다."),
-	INVALID_ROOM_TIME(HttpStatus.BAD_REQUEST, "운영 시작 시간은 종료 시간보다 빨라야 합니다."),
+	ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "공간을 찾을 수 없습니다."), INVALID_FILE(HttpStatus.BAD_REQUEST, "파일이 비어있거나 올바르지 않습니다."),
+	INVALID_FILE_TYPE(HttpStatus.BAD_REQUEST, "이미지 파일만 업로드할 수 있습니다."), FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다."),
+	ROOM_INACTIVE(HttpStatus.BAD_REQUEST, "예약 가능한 공간이 아닙니다."), INVALID_ROOM_TIME(HttpStatus.BAD_REQUEST, "운영 시작 시간은 종료 시간보다 빨라야 합니다."),
 
 	// Reservation
 	RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "예약을 찾을 수 없습니다."), RESERVATION_NOT_OWNER(HttpStatus.FORBIDDEN, "본인의 예약만 취소할 수 있습니다."),
