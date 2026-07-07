@@ -17,6 +17,8 @@
 - React API 호출 모듈 분리
 - 관리자 페이지 컴포넌트 분리
 - 프론트엔드 API URL 환경변수 분리
+- 예약 승인/거절 시 관리자 메모 입력 및 표시 기능 구현
+- 컨트롤러 공통 RequestMapping 기반 URL 매핑 방식 통일
 
 ---
 
@@ -87,6 +89,7 @@
 - 전체 예약 목록 조회
 - 예약 승인
 - 예약 거절
+- 예약 승인/거절 시 관리자 메모 입력
 - 전체 공간 목록 조회
 - 공간 등록
 - 공간 수정
@@ -209,8 +212,16 @@ studyroom-reservation
 | Method | URL | 설명 |
 |---|---|---|
 | GET | `/api/admin/reservations` | 관리자 전체 예약 목록 조회 |
-| PATCH | `/api/admin/reservations/{reservationId}/approve` | 예약 승인 |
-| PATCH | `/api/admin/reservations/{reservationId}/reject` | 예약 거절 |
+| PATCH | `/api/admin/reservations/{reservationId}/approve` | 예약 승인 및 관리자 메모 저장 |
+| PATCH | `/api/admin/reservations/{reservationId}/reject` | 예약 거절 및 관리자 메모 저장 |
+
+예약 승인/거절 요청 Body 예시:
+
+```json
+{
+  "adminMemo": "예약 승인합니다."
+}
+```
 
 ---
 
@@ -376,7 +387,7 @@ WHERE email = 'admin@example.com';
 관리자 로그인
 → 관리자 페이지 접근
 → 전체 예약 조회
-→ 예약 승인 / 거절
+→ 예약 승인 / 거절 및 관리자 메모 입력
 → 전체 공간 조회
 → 공간 등록 / 수정
 → 공간 활성화 / 비활성화
@@ -404,6 +415,8 @@ WHERE email = 'admin@example.com';
 - BusinessException / ErrorCode 기반 비즈니스 예외 처리
 - 인증 실패와 권한 없음에 대한 401 / 403 응답 분리
 - 공간 이미지 URL 저장 및 조회
+- 예약 승인/거절 시 관리자 메모 저장
+- 컨트롤러 공통 RequestMapping 기반 URL 매핑 방식 통일
 
 ### Frontend
 
@@ -427,6 +440,8 @@ WHERE email = 'admin@example.com';
 - 관리자 공간 관리 / 예약 관리 탭 UI 구현
 - 관리자 공간 관리 상태/검색 필터 구현
 - 공간 이미지 표시 및 이미지 URL 입력 기능
+- 예약 승인/거절 시 관리자 메모 입력 처리
+- 관리자 메모 표시 기능
 
 ---
 
@@ -435,7 +450,6 @@ WHERE email = 'admin@example.com';
 - 화면 디자인 고도화
 - 예약 검색/필터 기능 추가
 - 실제 파일 업로드 기반 공간 이미지 관리 기능 추가
-- 예약 승인/거절 사유 입력 기능 추가
 - Refresh Token 적용
 - 배포 환경 구성
 - Docker 적용
