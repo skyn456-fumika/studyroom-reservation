@@ -28,6 +28,8 @@
 - 실제 파일 업로드 기반 공간 이미지 관리 기능 구현
 - 관리자 통계 대시보드 구현
 - 승인 예약 기준 총 예상 매출 계산 기능 구현
+- Docker 기반 Spring Boot 애플리케이션 실행 환경 구성
+- GitHub Actions 기반 프론트엔드/백엔드 자동 빌드 검증
 
 ---
 
@@ -482,6 +484,8 @@ WHERE email = 'admin@example.com';
 - 예약 상태별 통계 조회
 - 공간 상태별 통계 조회
 - 승인 예약 기준 총 예상 매출 계산
+- Docker 기반 애플리케이션 실행 환경 구성
+- GitHub Actions 기반 백엔드 빌드 검증
 
 ### Frontend
 
@@ -520,6 +524,7 @@ WHERE email = 'admin@example.com';
 - 이미지 업로드 후 미리보기 표시
 - 관리자 통계 대시보드 카드 UI
 - 총 예상 매출 표시
+- GitHub Actions 기반 프론트엔드 빌드 검증
 
 ---
 
@@ -527,7 +532,7 @@ WHERE email = 'admin@example.com';
 
 - 배포 환경 구성
 - Docker 기반 MySQL 연동 및 Docker Compose 구성
-- GitHub Actions 기반 CI/CD 구성
+- GitHub Actions 기반 Docker 이미지 빌드 및 서버 자동 배포
 - 관리자 통계 차트 시각화
 - 날짜/월별 매출 통계
 - Refresh Token Rotation 적용
@@ -635,3 +640,48 @@ http://localhost:8095/swagger-ui.html
 docker stop studyroom-reservation
 docker rm studyroom-reservation
 ```
+
+---
+
+## GitHub Actions CI
+
+이 프로젝트는 GitHub Actions를 이용하여 `main` 브랜치에 push되거나 Pull Request가 생성될 때 자동으로 프론트엔드와 백엔드 빌드를 검증합니다.
+
+### CI 실행 조건
+
+```yml
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+```
+
+### CI 검증 항목
+
+React 프론트엔드 의존성 설치
+React 프론트엔드 빌드 확인
+Java 17 환경 구성
+Spring Boot 백엔드 Maven 패키징 확인
+
+### 프론트엔드 빌드
+
+```bash
+cd frontend
+npm ci
+npm run build
+```
+
+### 백엔드 빌드
+
+```bash
+mvn clean package -DskipTests
+```
+
+현재 백엔드 테스트는 로컬 `application.yml`, DB, JWT secret 설정에 의존하므로 CI 1차 단계에서는 `-DskipTests` 옵션을 사용하여 컴파일 및 패키징 가능 여부를 검증합니다.
+
+추후 개선 시 `application-test.yml`, H2 또는 Docker 기반 MySQL 서비스를 추가하여 테스트 자동화까지 확장할 수 있습니다.
+
+---
