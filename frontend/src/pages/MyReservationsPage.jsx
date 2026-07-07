@@ -100,7 +100,19 @@ function MyReservationsPage() {
 
   return (
     <div>
-      <h1 className="page-title">내 예약 목록</h1>
+      <div className="page-hero">
+        <div>
+          <p className="page-eyebrow">My Reservations</p>
+          <h1 className="page-title">내 예약 목록</h1>
+          <p className="page-description">
+            신청한 예약의 진행 상태를 확인하고, 대기 중인 예약을 취소할 수 있습니다.
+          </p>
+        </div>
+
+        <span className="page-count-badge">
+          전체 예약 {reservations.length}건
+        </span>
+      </div>
 
       <div className="card admin-filter-card my-reservation-filter-card">
         <div className="admin-filter-row">
@@ -161,13 +173,15 @@ function MyReservationsPage() {
                 <div>
                   <h2>{reservation.roomName}</h2>
 
-                  <p className="reservation-date">
-                    {reservation.reservationDate}
-                  </p>
+                  <div className="reservation-meta">
+                    <p className="reservation-date">
+                      {reservation.reservationDate}
+                    </p>
 
-                  <p className="reservation-time">
-                    {reservation.startTime.slice(0, 5)} ~ {reservation.endTime.slice(0, 5)}
-                  </p>
+                    <p className="reservation-time">
+                      {reservation.startTime.slice(0, 5)} ~ {reservation.endTime.slice(0, 5)}
+                    </p>
+                  </div>
                 </div>
 
                 <span className={`status-badge ${reservation.status.toLowerCase()}`}>
