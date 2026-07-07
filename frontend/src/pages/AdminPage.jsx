@@ -31,8 +31,12 @@ function AdminPage() {
 
   const [activeTab, setActiveTab] = useState('rooms');
 
+  const [roomStatusFilter, setRoomStatusFilter] = useState('ALL');
+  const [roomSearchKeyword, setRoomSearchKeyword] = useState('');
+
   const [reservationStatusFilter, setReservationStatusFilter] = useState('ALL');
   const [reservationSearchKeyword, setReservationSearchKeyword] = useState('');
+  
 
   const [loading, setLoading] = useState(true);
   const [actionLoadingId, setActionLoadingId] = useState(null);
@@ -312,6 +316,21 @@ function AdminPage() {
     return matchesStatus && matchesKeyword;
   });
 
+  const filteredRooms = rooms.filter((room) => {
+    const matchesStatus =
+      roomStatusFilter === 'ALL' ||
+      room.status === roomStatusFilter;
+
+    const keyword = roomSearchKeyword.trim().toLowerCase();
+
+    const matchesKeyword =
+      !keyword ||
+      room.name.toLowerCase().includes(keyword) ||
+      room.location.toLowerCase().includes(keyword);
+
+    return matchesStatus && matchesKeyword;
+  });
+
   return (
     <div>
       <h1 className="page-title">관리자 페이지</h1>
@@ -338,7 +357,9 @@ function AdminPage() {
         <section className="admin-section">
           <div className="section-header">
             <h2 className="section-title">공간 관리</h2>
-            <span className="section-count">총 {rooms.length}개</span>
+            <span className="section-count">
+              {filteredRooms.length} / {rooms.length}개
+            </span>
           </div>
 
           <AdminRoomForm
@@ -351,7 +372,12 @@ function AdminPage() {
           />
 
           <AdminRoomList
-            rooms={rooms}
+            rooms={filteredRooms}
+            totalCount={rooms.length}
+            roomStatusFilter={roomStatusFilter}
+            roomSearchKeyword={roomSearchKeyword}
+            onStatusFilterChange={setRoomStatusFilter}
+            onSearchKeywordChange={setRoomSearchKeyword}
             onEditRoom={handleEditRoom}
             onToggleRoomStatus={handleToggleRoomStatus}
           />
