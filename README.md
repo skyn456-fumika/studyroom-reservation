@@ -526,7 +526,7 @@ WHERE email = 'admin@example.com';
 ## 향후 개선 사항
 
 - 배포 환경 구성
-- Docker 적용
+- Docker 기반 MySQL 연동 및 Docker Compose 구성
 - GitHub Actions 기반 CI/CD 구성
 - 관리자 통계 차트 시각화
 - 날짜/월별 매출 통계
@@ -580,3 +580,58 @@ http://localhost:8095/swagger-ui.html
 이미지 업로드 후 실행 위치 기준으로 다음 폴더가 생성되는지 확인합니다.
 
 `uploads/rooms`
+
+---
+
+## Docker 실행 방법
+
+### 1. jar 빌드
+
+```bash
+mvn clean package
+```
+
+### 2. Docker 이미지 빌드
+
+```bash
+docker build -t studyroom-reservation .
+```
+
+### 3. Docker 실행용 DB 주소 설정
+
+Docker 컨테이너에서 Windows 로컬 MySQL에 접근하려면 `application.yml`의 DB 주소를 다음과 같이 설정합니다.
+
+```yml
+spring:
+  datasource:
+    url: jdbc:mysql://host.docker.internal:3306/studyroom_reservation?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+```
+
+### 4. 컨테이너 실행
+
+```powershell
+docker run --name studyroom-reservation `
+  -p 8095:8095 `
+  -v ${PWD}/src/main/resources/application.yml:/app/application.yml `
+  -v ${PWD}/uploads:/app/uploads `
+  studyroom-reservation `
+  --spring.config.location=file:/app/application.yml
+```
+
+한 줄 명령어:
+
+```powershell
+docker run --name studyroom-reservation -p 8095:8095 -v ${PWD}/src/main/resources/application.yml:/app/application.yml -v ${PWD}/uploads:/app/uploads studyroom-reservation --spring.config.location=file:/app/application.yml
+```
+
+### 5. 접속 확인
+
+http://localhost:8095
+http://localhost:8095/swagger-ui.html
+
+### 6. 컨테이너 중지 및 삭제
+
+```bash
+docker stop studyroom-reservation
+docker rm studyroom-reservation
+```
