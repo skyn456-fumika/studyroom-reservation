@@ -352,7 +352,27 @@ function AdminPage() {
 
   return (
     <div>
-      <h1 className="page-title">관리자 페이지</h1>
+      <div className="page-hero admin-page-hero">
+        <div>
+          <p className="page-eyebrow">Admin Dashboard</p>
+          <h1 className="page-title">관리자 페이지</h1>
+          <p className="page-description">
+            공간 정보와 예약 요청을 한 곳에서 관리할 수 있습니다.
+          </p>
+        </div>
+
+        <div className="admin-summary">
+          <div className="admin-summary-card">
+            <span className="admin-summary-label">전체 공간</span>
+            <strong>{rooms.length}개</strong>
+          </div>
+
+          <div className="admin-summary-card">
+            <span className="admin-summary-label">전체 예약</span>
+            <strong>{reservations.length}건</strong>
+          </div>
+        </div>
+      </div>
 
       <div className="admin-tabs">
         <button

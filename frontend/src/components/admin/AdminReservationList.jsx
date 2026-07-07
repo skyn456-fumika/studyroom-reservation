@@ -60,13 +60,15 @@ function AdminReservationList({
                 <div>
                   <h2>{reservation.roomName}</h2>
 
-                  <p className="reservation-date">
-                    {reservation.reservationDate}
-                  </p>
+                  <div className="reservation-meta">
+                    <p className="reservation-date">
+                      {reservation.reservationDate}
+                    </p>
 
-                  <p className="reservation-time">
-                    {reservation.startTime.slice(0, 5)} ~ {reservation.endTime.slice(0, 5)}
-                  </p>
+                    <p className="reservation-time">
+                      {reservation.startTime.slice(0, 5)} ~ {reservation.endTime.slice(0, 5)}
+                    </p>
+                  </div>
 
                   <p className="admin-reservation-user">
                     예약자: {reservation.userName}

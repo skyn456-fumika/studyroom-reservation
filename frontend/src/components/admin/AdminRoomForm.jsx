@@ -84,17 +84,18 @@ function AdminRoomForm({
         </div>
 
         <div className="form-group">
+          <label>이미지 URL</label>
+          <input
+            type="text"
+            name="imageUrl"
+            value={roomForm.imageUrl}
+            onChange={onChange}
+            placeholder="https://example.com/room-image.jpg"
+          />
+        </div>
+
+        <div className="form-group">
           <label>공간 설명</label>
-          <div className="form-group">
-            <label>이미지 URL</label>
-            <input
-              type="text"
-              name="imageUrl"
-              value={roomForm.imageUrl}
-              onChange={onChange}
-              placeholder="https://example.com/room-image.jpg"
-            />
-          </div>
           <textarea
             name="description"
             value={roomForm.description}
