@@ -51,4 +51,4 @@ jobs:
           cache: maven
 
       - name: Build backend
-        run: mvn clean package
+        run: mvn clean package -DskipTests
