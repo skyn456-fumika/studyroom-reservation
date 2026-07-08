@@ -34,12 +34,11 @@ public class SecurityConfig {
 				.httpBasic(basic -> basic.disable()).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.exceptionHandling(exception -> exception.authenticationEntryPoint(customAuthenticationEntryPoint)
 						.accessDeniedHandler(customAccessDeniedHandler))
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
-						.requestMatchers("/uploads/**").permitAll().requestMatchers("/api/auth/**").permitAll().requestMatchers("/api/users/me")
-						.authenticated().requestMatchers("/api/admin/**").hasRole("ADMIN").requestMatchers("/api/auth/**").permitAll()
-						.requestMatchers("/api/rooms/**").permitAll().requestMatchers("/api/users/me").authenticated()
-						.requestMatchers("/api/reservations/**").authenticated().requestMatchers("/api/admin/**").hasRole("ADMIN").anyRequest()
-						.permitAll())
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers("/", "/index.html", "/favicon.svg", "/favicon.ico", "/assets/**", "/uploads/**", "/swagger-ui/**",
+								"/swagger-ui.html", "/v3/api-docs/**", "/api/auth/**", "/api/rooms/**")
+						.permitAll().requestMatchers("/api/users/me").authenticated().requestMatchers("/api/reservations/**").authenticated()
+						.requestMatchers("/api/admin/**").hasRole("ADMIN").anyRequest().permitAll())
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
@@ -54,7 +53,7 @@ public class SecurityConfig {
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
 
-		configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+		configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://studyroom.hongtfolio.kr"));
 		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 		configuration.setAllowedHeaders(List.of("*"));
 		configuration.setAllowCredentials(true);
